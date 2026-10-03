@@ -18,7 +18,9 @@ MONEY = "#,##0.00"
 DATE = "yyyy-mm-dd"
 
 
-def _write_table(ws: Worksheet, headers: list[str], rows: list[list], money_cols=(), date_cols=()) -> None:
+def _write_table(ws: Worksheet, headers: list[str], rows: list[list], money_cols: tuple[int, ...] = (),
+                 date_cols: tuple[int, ...] = ()) -> None:
+    """Write a styled table (header, number formats, widths, filter, frozen header)."""
     ws.append(headers)
     for cell in ws[1]:
         cell.fill, cell.font = HEADER_FILL, HEADER_FONT

@@ -34,6 +34,8 @@ ITEM_HEADERS = {
 
 @dataclass
 class LineItem:
+    """One row of an invoice's line-items table."""
+
     description: str
     quantity: Decimal | None
     unit_price: Decimal | None
@@ -42,6 +44,8 @@ class LineItem:
 
 @dataclass
 class Invoice:
+    """Structured data extracted from one invoice PDF, plus validation issues."""
+
     source_file: str
     vendor: str | None = None
     tax_id: str | None = None
@@ -57,10 +61,12 @@ class Invoice:
 
     @property
     def is_valid(self) -> bool:
+        """True when the invoice passed every validation check."""
         return not self.issues
 
 
 def _search(pattern: str, text: str) -> str | None:
+    """Return the first capture group of `pattern` in `text`, stripped, or None."""
     match = re.search(pattern, text, flags=re.IGNORECASE | re.MULTILINE)
     return match.group(1).strip() if match else None
 
@@ -71,14 +77,14 @@ def _parse_items(tables: list[list[list[str | None]]]) -> list[LineItem]:
         if not table:
             continue
         header = [(cell or "").strip().lower() for cell in table[0]]
-        columns = {}
+        columns: dict[str, int] = {}
         for key, names in ITEM_HEADERS.items():
             for idx, cell in enumerate(header):
                 if cell in names:
                     columns[key] = idx
         if len(columns) < len(ITEM_HEADERS):
             continue
-        items = []
+        items: list[LineItem] = []
         for row in table[1:]:
             if not row or not row[columns["description"]]:
                 continue
@@ -94,7 +100,7 @@ def _parse_items(tables: list[list[list[str | None]]]) -> list[LineItem]:
 
 def validate(invoice: Invoice) -> list[str]:
     """Business checks an accounts-payable analyst would do by hand."""
-    issues = []
+    issues: list[str] = []
     for name in ("number", "date", "total"):
         if getattr(invoice, name) is None:
             issues.append(f"Missing field: {name}")

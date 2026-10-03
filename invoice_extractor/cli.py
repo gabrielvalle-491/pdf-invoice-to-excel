@@ -14,6 +14,7 @@ from invoice_extractor.extractor import extract_folder
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run the extractor CLI and return the process exit code (0 = success, 1 = error)."""
     parser = argparse.ArgumentParser(description="Extract invoice PDFs into a formatted Excel workbook")
     parser.add_argument("input_dir", type=Path, help="Folder with invoice PDFs")
     parser.add_argument("-o", "--output", type=Path, default=Path("output/invoices.xlsx"))

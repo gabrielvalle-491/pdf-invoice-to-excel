@@ -24,6 +24,8 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, Tabl
 
 @dataclass
 class VendorStyle:
+    """Layout and locale conventions used by one fictional vendor."""
+
     name: str
     tax_id: str
     lang: str  # "en" or "es"
@@ -74,6 +76,7 @@ LABELS = {
 
 
 def fmt_amount(value: Decimal, decimal_comma: bool) -> str:
+    """Format an amount with US (1,234.56) or AR/EU (1.234,56) separators."""
     text = f"{value:,.2f}"
     if decimal_comma:
         text = text.replace(",", "X").replace(".", ",").replace("X", ".")
@@ -81,6 +84,7 @@ def fmt_amount(value: Decimal, decimal_comma: bool) -> str:
 
 
 def build_invoice(path: Path, vendor: VendorStyle, number: str, issued: date, rng: random.Random) -> dict:
+    """Render one invoice PDF at `path` and return its ground-truth values."""
     labels = LABELS[vendor.lang]
     items = []
     for desc, price in rng.sample(PRODUCTS[vendor.lang], k=rng.randint(2, 5)):
@@ -143,6 +147,7 @@ def generate(out_dir: Path, count: int = 8, seed: int = 7) -> list[dict]:
 
 
 def main() -> None:
+    """Command line entry point for generating sample invoices."""
     parser = argparse.ArgumentParser(description="Generate sample invoice PDFs")
     parser.add_argument("out_dir", type=Path, nargs="?", default=Path("samples"))
     parser.add_argument("--count", type=int, default=8)
