@@ -1,5 +1,7 @@
 # PDF → Excel Invoice Automation
 
+Español: [README.es.md](README.es.md)
+
 ![CI](https://github.com/gabrielvalle-491/pdf-invoice-to-excel/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -89,6 +91,18 @@ the ground truth, plus edge cases (corrupted PDFs, wrong totals, number formats)
 Field labels live in `FIELD_PATTERNS` (`extractor.py`). Supporting a new layout is
 usually one extra regex alternative, e.g. adding `Nro\. Comprobante` to the invoice
 number pattern.
+
+## How I would deliver this to a client
+
+If you hire me for this, I would:
+
+- Ask for a handful of real invoices from each of your vendors (PDF, with selectable text) and adjust the field labels in `FIELD_PATTERNS` until every one of them extracts cleanly.
+- Set up one shared input folder: each week your team drops the new PDFs there, and nothing else changes in their routine.
+- Run it with a single command (`python -m invoice_extractor <folder> -o <workbook>.xlsx`), scheduled weekly with Windows Task Scheduler or cron so the workbook is ready without anyone launching it.
+- Hand over the Excel workbook as the deliverable: the **Summary** sheet shows how many invoices were processed and how many need review, with totals per currency.
+- Report problems through the tool's own mechanisms: every invoice that fails a check is highlighted in **Invoices** and listed in the **Review** sheet with the exact reason (unreadable PDF, missing field, totals that do not add up, due date before issue date).
+- Make the scheduled run easy to monitor: the console prints `OK: n | Needs review: n`, and a missing or empty input folder prints an error and exits with code 1, so the scheduler can flag the failed run.
+- Write a short how-to for your team and add the test cases for any new vendor layout, so future changes do not break existing vendors.
 
 ## Notes
 
