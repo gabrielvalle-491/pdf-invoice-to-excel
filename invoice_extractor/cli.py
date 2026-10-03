@@ -15,9 +15,13 @@ from invoice_extractor.extractor import extract_folder
 
 def main(argv: list[str] | None = None) -> int:
     """Run the extractor CLI and return the process exit code (0 = success, 1 = error)."""
-    parser = argparse.ArgumentParser(description="Extract invoice PDFs into a formatted Excel workbook")
+    parser = argparse.ArgumentParser(
+        prog="python -m invoice_extractor",
+        description="Extract invoice PDFs into a formatted Excel workbook",
+    )
     parser.add_argument("input_dir", type=Path, help="Folder with invoice PDFs")
-    parser.add_argument("-o", "--output", type=Path, default=Path("output/invoices.xlsx"))
+    parser.add_argument("-o", "--output", type=Path, default=Path("output/invoices.xlsx"),
+                        help="Excel file to create (default: output/invoices.xlsx)")
     args = parser.parse_args(argv)
 
     if not args.input_dir.is_dir():

@@ -148,7 +148,8 @@ def generate(out_dir: Path, count: int = 8, seed: int = 7) -> list[dict]:
 
 def main() -> None:
     """Command line entry point for generating sample invoices."""
-    parser = argparse.ArgumentParser(description="Generate sample invoice PDFs")
+    parser = argparse.ArgumentParser(prog="python -m invoice_extractor.generate_samples",
+                                     description="Generate sample invoice PDFs")
     parser.add_argument("out_dir", type=Path, nargs="?", default=Path("samples"))
     parser.add_argument("--count", type=int, default=8)
     args = parser.parse_args()
